@@ -14,17 +14,17 @@ public:
 private:
     enum Direction { Horizontal, Vertical };
 
-    struct Piece {
+    struct Block {
         int row, column;
         int length;
         Direction direction;
     };
 
     struct Move {
-        int pieceIndex, distance;
+        int blockIndex, distance;
     };
 
-    typedef std::vector<Piece> Puzzle;
+    typedef std::vector<Block> Puzzle;
     typedef std::vector<int> State;
     typedef std::vector<Move> Path;
 
@@ -32,13 +32,13 @@ private:
     void readPuzzle();
     bool solvePuzzle();
     void showSolution();
-    bool moveLeft(State &state, int pieceIndex) const;
-    bool moveRight(State &state, int pieceIndex) const;
-    bool moveUp(State &state, int pieceIndex) const;
-    bool moveDown(State &state, int pieceIndex) const;
+    bool moveLeft(State &state, int blockIndex) const;
+    bool moveRight(State &state, int blockIndex) const;
+    bool moveUp(State &state, int blockIndex) const;
+    bool moveDown(State &state, int blockIndex) const;
 
 private:
-    int pieceCount;
+    int blockCount;
     Puzzle puzzle;
     Path solution;
 };
