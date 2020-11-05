@@ -1,8 +1,8 @@
 #include "Aplicacion.h"
-#include <QTextStream>
+
+using namespace std;
 
 Aplicacion::Aplicacion()
-    : salida(stdout, QIODevice::WriteOnly)
 {
 }
 
@@ -12,35 +12,35 @@ void Aplicacion::ejecutar()
     if (resolverPuzzle())
         mostrarSolucion();
     else
-        salida << "No se pudo resolver el puzzle.\n";
+        cout << "No se pudo resolver el puzzle.\n";
 }
 
 void Aplicacion::leerPuzzle()
 {
     puzzle.clear();
-    puzzle.append({ 0, 3, 2, Vertical });
-    puzzle.append({ 0, 4, 2, Horizontal });
-    puzzle.append({ 1, 2, 2, Vertical });
-    puzzle.append({ 1, 5, 2, Vertical });
-    puzzle.append({ 2, 0, 2, Horizontal });
-    puzzle.append({ 2, 3, 2, Vertical });
-    puzzle.append({ 2, 4, 3, Vertical });
-    puzzle.append({ 3, 0, 2, Horizontal });
-    puzzle.append({ 3, 5, 2, Vertical });
-    puzzle.append({ 4, 0, 2, Vertical });
-    puzzle.append({ 4, 1, 3, Horizontal });
+    puzzle.push_back({ 0, 3, 2, Vertical });
+    puzzle.push_back({ 0, 4, 2, Horizontal });
+    puzzle.push_back({ 1, 2, 2, Vertical });
+    puzzle.push_back({ 1, 5, 2, Vertical });
+    puzzle.push_back({ 2, 0, 2, Horizontal });
+    puzzle.push_back({ 2, 3, 2, Vertical });
+    puzzle.push_back({ 2, 4, 3, Vertical });
+    puzzle.push_back({ 3, 0, 2, Horizontal });
+    puzzle.push_back({ 3, 5, 2, Vertical });
+    puzzle.push_back({ 4, 0, 2, Vertical });
+    puzzle.push_back({ 4, 1, 3, Horizontal });
     numeroPiezas = puzzle.size();
 }
 
 bool Aplicacion::resolverPuzzle()
 {
-    QMap<Estado, Camino> mapEstados;
-    QVector<Estado> pila1, pila2;
+    map<Estado, Camino> mapEstados;
+    vector<Estado> pila1, pila2;
     Estado estadoHijo;
     int distancia;
 
-    mapEstados.insert(QVector<int>(numeroPiezas, 0), QVector<Movimiento>());
-    pila1.append(QVector<int>(numeroPiezas, 0));
+    mapEstados[vector<int>(numeroPiezas, 0)];
+    pila1.push_back(vector<int>(numeroPiezas, 0));
 
     do {
         pila2.clear();
@@ -52,9 +52,9 @@ bool Aplicacion::resolverPuzzle()
                     while (moverIzquierda(estadoHijo, i)) {
                         --distancia;
                         if (mapEstados.find(estadoHijo) == mapEstados.end()) {
-                            pila2.append(estadoHijo);
+                            pila2.push_back(estadoHijo);
                             mapEstados[estadoHijo] = mapEstados[estadoPadre];
-                            mapEstados[estadoHijo].append({ i, distancia });
+                            mapEstados[estadoHijo].push_back({ i, distancia });
                         }
                     }
                     estadoHijo = estadoPadre;
@@ -62,9 +62,9 @@ bool Aplicacion::resolverPuzzle()
                     while (moverDerecha(estadoHijo, i)) {
                         ++distancia;
                         if (mapEstados.find(estadoHijo) == mapEstados.end()) {
-                            pila2.append(estadoHijo);
+                            pila2.push_back(estadoHijo);
                             mapEstados[estadoHijo] = mapEstados[estadoPadre];
-                            mapEstados[estadoHijo].append({ i, distancia });
+                            mapEstados[estadoHijo].push_back({ i, distancia });
                             if (puzzle[i].fila == 2 && puzzle[i].columna + estadoHijo[i] == 4) {
                                 solucion = mapEstados[estadoHijo];
                                 return true;
@@ -78,9 +78,9 @@ bool Aplicacion::resolverPuzzle()
                     while (moverArriba(estadoHijo, i)) {
                         --distancia;
                         if (mapEstados.find(estadoHijo) == mapEstados.end()) {
-                            pila2.append(estadoHijo);
+                            pila2.push_back(estadoHijo);
                             mapEstados[estadoHijo] = mapEstados[estadoPadre];
-                            mapEstados[estadoHijo].append({ i, distancia });
+                            mapEstados[estadoHijo].push_back({ i, distancia });
                         }
                     }
                     estadoHijo = estadoPadre;
@@ -88,9 +88,9 @@ bool Aplicacion::resolverPuzzle()
                     while (moverAbajo(estadoHijo, i)) {
                         ++distancia;
                         if (mapEstados.find(estadoHijo) == mapEstados.end()) {
-                            pila2.append(estadoHijo);
+                            pila2.push_back(estadoHijo);
                             mapEstados[estadoHijo] = mapEstados[estadoPadre];
-                            mapEstados[estadoHijo].append({ i, distancia });
+                            mapEstados[estadoHijo].push_back({ i, distancia });
                         }
                     }
                 }
@@ -105,7 +105,7 @@ void Aplicacion::mostrarSolucion()
 {
     int numeroMovimiento = 1;
     for (const auto &movimiento : solucion) {
-        salida << numeroMovimiento << ": " << "[" << movimiento.indicePieza << ", " << movimiento.distancia << "]\n";
+        cout << numeroMovimiento << ": " << "[" << movimiento.indicePieza << ", " << movimiento.distancia << "]\n";
         ++numeroMovimiento;
     }
 }

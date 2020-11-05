@@ -1,9 +1,9 @@
 ﻿#ifndef APLICACION_H
 #define APLICACION_H
 
-#include <QVector>
-#include <QMap>
-#include <QTextStream>
+#include <vector>
+#include <map>
+#include <iostream>
 
 class Aplicacion
 {
@@ -24,9 +24,9 @@ private:
         int indicePieza, distancia;
     };
 
-    typedef QVector<Pieza> Puzzle;
-    typedef QVector<int> Estado;
-    typedef QVector<Movimiento> Camino;
+    typedef std::vector<Pieza> Puzzle;
+    typedef std::vector<int> Estado;
+    typedef std::vector<Movimiento> Camino;
 
 private:
     void leerPuzzle();
@@ -41,7 +41,6 @@ private:
     int numeroPiezas;
     Puzzle puzzle;
     Camino solucion;
-    QTextStream salida;
 };
 
 #endif
