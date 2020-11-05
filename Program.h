@@ -24,9 +24,9 @@ private:
         int blockIndex, distance;
     };
 
-    typedef std::vector<Block> Puzzle;
+    typedef std::vector<Block> BlockVector;
     typedef std::vector<int> State;
-    typedef std::vector<Move> Path;
+    typedef std::vector<Move> MoveVector;
 
 private:
     void readPuzzle();
@@ -36,11 +36,12 @@ private:
     bool moveRight(State &state, int blockIndex) const;
     bool moveUp(State &state, int blockIndex) const;
     bool moveDown(State &state, int blockIndex) const;
+    void printMove(int distance, char step) const;
 
 private:
     int blockCount;
-    Puzzle puzzle;
-    Path solution;
+    BlockVector blocks;
+    MoveVector path;
 };
 
 #endif
