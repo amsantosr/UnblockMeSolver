@@ -1,4 +1,6 @@
 #include "Program.h"
+#include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -17,19 +19,16 @@ void Program::execute()
 
 void Program::readPuzzle()
 {
-    blocks.clear();
-    blocks.push_back({ 0, 3, 2, Vertical });
-    blocks.push_back({ 0, 4, 2, Horizontal });
-    blocks.push_back({ 1, 2, 2, Vertical });
-    blocks.push_back({ 1, 5, 2, Vertical });
-    blocks.push_back({ 2, 0, 2, Horizontal });
-    blocks.push_back({ 2, 3, 2, Vertical });
-    blocks.push_back({ 2, 4, 3, Vertical });
-    blocks.push_back({ 3, 0, 2, Horizontal });
-    blocks.push_back({ 3, 5, 2, Vertical });
-    blocks.push_back({ 4, 0, 2, Vertical });
-    blocks.push_back({ 4, 1, 3, Horizontal });
-    blockCount = blocks.size();
+    cin >> blockCount;
+    blocks.resize(blockCount);
+    for (auto &block : blocks) {
+        char ch;
+        cin >> block.row >> block.column >> block.length >> ch;
+        if (ch == 'H')
+            block.direction = Horizontal;
+        else if (ch == 'V')
+            block.direction = Vertical;
+    }
 }
 
 bool Program::solvePuzzle()
@@ -107,7 +106,6 @@ void Program::showSolution()
     vector<int> rows(blockCount);
     vector<int> columns(blockCount);
 
-    // initialize the positions of the blocks
     for (int i = 0; i < blockCount; ++i) {
         rows[i] = blocks[i].row;
         columns[i] = blocks[i].column;
@@ -120,16 +118,16 @@ void Program::showSolution()
         Direction direction = blocks[move.blockIndex].direction;
         if (direction == Horizontal) {
             if (move.distance < 0)
-                printMove(-move.distance, 'L');
+                cout << -move.distance << 'L';
             else if (move.distance > 0)
-                printMove(move.distance, 'R');
+                cout << move.distance << 'R';
             column += move.distance;
         }
         else if (direction == Vertical) {
             if (move.distance < 0)
-                printMove(-move.distance, 'U');
+                cout << -move.distance << 'U';
             else if (move.distance > 0)
-                printMove(move.distance, 'D');
+                cout << move.distance << 'D';
             row += move.distance;
         }
         cout << '\n';
@@ -239,12 +237,6 @@ bool Program::moveDown(Program::State &state, int blockIndex) const
     }
     ++state[blockIndex];
     return true;
-}
-
-void Program::printMove(int distance, char step) const
-{
-    for (int i = 0; i < distance; ++i)
-        cout << step;
 }
 
 int main()

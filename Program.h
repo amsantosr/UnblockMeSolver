@@ -2,8 +2,6 @@
 #define PROGRAM_H
 
 #include <vector>
-#include <map>
-#include <iostream>
 
 class Program
 {
@@ -36,7 +34,6 @@ private:
     bool moveRight(State &state, int blockIndex) const;
     bool moveUp(State &state, int blockIndex) const;
     bool moveDown(State &state, int blockIndex) const;
-    void printMove(int distance, char step) const;
 
 private:
     int blockCount;
