@@ -14,14 +14,14 @@ void Program::execute()
     if (solvePuzzle())
         showSolution();
     else
-        cout << "Unable to solve the given puzzle.\n";
+        cerr << "Unable to solve the given puzzle.\n";
 }
 
 void Program::readPuzzle()
 {
     cin >> blockCount;
-    blocks.resize(blockCount);
-    for (auto &block : blocks) {
+    puzzle.resize(blockCount);
+    for (auto &block : puzzle) {
         char ch;
         cin >> block.row >> block.column >> block.length >> ch;
         if (ch == 'H')
@@ -45,7 +45,7 @@ bool Program::solvePuzzle()
         vector2.clear();
         for (const State &parentState : vector1) {
             for (int i = 0; i < blockCount; ++i) {
-                if (blocks[i].direction == Horizontal) {
+                if (puzzle[i].direction == Horizontal) {
                     childState = parentState;
                     distance = 0;
                     while (moveLeft(childState, i)) {
@@ -64,14 +64,14 @@ bool Program::solvePuzzle()
                             vector2.push_back(childState);
                             mapStates[childState] = mapStates[parentState];
                             mapStates[childState].push_back({ i, distance });
-                            if (blocks[i].row == 2 && blocks[i].column + childState[i] == 4) {
-                                path = mapStates[childState];
+                            if (puzzle[i].row == 2 && puzzle[i].column + childState[i] == 4) {
+                                solution = mapStates[childState];
                                 return true;
                             }
                         }
                     }
                 }
-                else if (blocks[i].direction == Vertical) {
+                else if (puzzle[i].direction == Vertical) {
                     childState = parentState;
                     distance = 0;
                     while (moveUp(childState, i)) {
@@ -107,15 +107,15 @@ void Program::showSolution()
     vector<int> columns(blockCount);
 
     for (int i = 0; i < blockCount; ++i) {
-        rows[i] = blocks[i].row;
-        columns[i] = blocks[i].column;
+        rows[i] = puzzle[i].row;
+        columns[i] = puzzle[i].column;
     }
 
-    for (auto &move : path) {
+    for (auto &move : solution) {
         int &row = rows[move.blockIndex];
         int &column = columns[move.blockIndex];
         cout << number << ": (" << row << ", " << column << ") ";
-        Direction direction = blocks[move.blockIndex].direction;
+        Direction direction = puzzle[move.blockIndex].direction;
         if (direction == Horizontal) {
             if (move.distance < 0)
                 cout << -move.distance << 'L';
@@ -137,13 +137,13 @@ void Program::showSolution()
 
 bool Program::moveLeft(Program::State &state, int blockIndex) const
 {
-    const auto &block = blocks[blockIndex];
+    const auto &block = puzzle[blockIndex];
     int newColumn = block.column + state[blockIndex] - 1;
     if (newColumn < 0)
         return false;
     for (int i = 0; i < blockCount; ++i) {
         if (i != blockIndex) {
-            const auto &blockI = blocks[i];
+            const auto &blockI = puzzle[i];
             if (blockI.direction == Horizontal) {
                 if (block.row == blockI.row && newColumn == blockI.column + state[i] + blockI.length - 1)
                     return false;
@@ -163,13 +163,13 @@ bool Program::moveLeft(Program::State &state, int blockIndex) const
 
 bool Program::moveRight(Program::State &state, int blockIndex) const
 {
-    const auto &block = blocks[blockIndex];
+    const auto &block = puzzle[blockIndex];
     int nuevaColumna = block.column + state[blockIndex] + block.length;
     if (nuevaColumna >= 6)
         return false;
     for (int i = 0; i < blockCount; ++i) {
         if (i != blockIndex) {
-            const auto &blockI = blocks[i];
+            const auto &blockI = puzzle[i];
             if (blockI.direction == Horizontal) {
                 if (block.row == blockI.row && nuevaColumna == blockI.column + state[i])
                     return false;
@@ -189,13 +189,13 @@ bool Program::moveRight(Program::State &state, int blockIndex) const
 
 bool Program::moveUp(Program::State &state, int blockIndex) const
 {
-    const auto &block = blocks[blockIndex];
+    const auto &block = puzzle[blockIndex];
     int newRow = block.row + state[blockIndex] - 1;
     if (newRow < 0)
         return false;
     for (int i = 0; i < blockCount; ++i) {
         if (i != blockIndex) {
-            const auto &blockI = blocks[i];
+            const auto &blockI = puzzle[i];
             if (blockI.direction == Horizontal) {
                 if (newRow == blockI.row) {
                     int columnI = blockI.column + state[i];
@@ -215,13 +215,13 @@ bool Program::moveUp(Program::State &state, int blockIndex) const
 
 bool Program::moveDown(Program::State &state, int blockIndex) const
 {
-    const auto &block = blocks[blockIndex];
+    const auto &block = puzzle[blockIndex];
     int newRow = block.row + state[blockIndex] + block.length;
     if (newRow >= 6)
         return false;
     for (int i = 0; i < blockCount; ++i) {
         if (i != blockIndex) {
-            const auto &blockI = blocks[i];
+            const auto &blockI = puzzle[i];
             if (blockI.direction == Horizontal) {
                 if (newRow == blockI.row) {
                     int columnI = blockI.column + state[i];

@@ -37,8 +37,8 @@ private:
 
 private:
     int blockCount;
-    BlockVector blocks;
-    MoveVector path;
+    BlockVector puzzle;
+    MoveVector solution;
 };
 
 #endif
