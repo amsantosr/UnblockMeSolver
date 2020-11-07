@@ -2,6 +2,7 @@
 #define PROGRAM_H
 
 #include <vector>
+#include <map>
 
 class Program
 {
@@ -18,13 +19,15 @@ private:
         Direction direction;
     };
 
+    typedef std::vector<Block> BlockVector;
+    struct Move;
+    typedef std::vector<int> State;
+
+    typedef std::map<State, Move> MapStates;
     struct Move {
         int blockIndex, distance;
+        MapStates::iterator previous;
     };
-
-    typedef std::vector<Block> BlockVector;
-    typedef std::vector<int> State;
-    typedef std::vector<Move> MoveVector;
 
 private:
     void readPuzzle();
@@ -38,7 +41,7 @@ private:
 private:
     int blockCount;
     BlockVector puzzle;
-    MoveVector solution;
+    MapStates::iterator lastIterator;
 };
 
 #endif

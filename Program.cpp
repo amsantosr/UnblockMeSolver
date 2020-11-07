@@ -1,6 +1,7 @@
 #include "Program.h"
 #include <map>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
@@ -33,12 +34,12 @@ void Program::readPuzzle()
 
 bool Program::solvePuzzle()
 {
-    map<State, MoveVector> mapStates;
+    MapStates mapStates;
     vector<State> vector1, vector2;
     State childState;
     int distance;
 
-    mapStates[vector<int>(blockCount, 0)];
+    mapStates[vector<int>(blockCount, 0)] = { 0, 0, mapStates.end() };
     vector1.push_back(vector<int>(blockCount, 0));
 
     do {
@@ -52,8 +53,7 @@ bool Program::solvePuzzle()
                         --distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = mapStates[parentState];
-                            mapStates[childState].push_back({ i, distance });
+                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
                         }
                     }
                     childState = parentState;
@@ -62,10 +62,9 @@ bool Program::solvePuzzle()
                         ++distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = mapStates[parentState];
-                            mapStates[childState].push_back({ i, distance });
+                            mapStates[childState] = {i, distance, mapStates.find(parentState) };
                             if (puzzle[i].row == 2 && puzzle[i].column + childState[i] == 4) {
-                                solution = mapStates[childState];
+                                lastIterator = mapStates.find(childState);
                                 return true;
                             }
                         }
@@ -78,8 +77,7 @@ bool Program::solvePuzzle()
                         --distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = mapStates[parentState];
-                            mapStates[childState].push_back({ i, distance });
+                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
                         }
                     }
                     childState = parentState;
@@ -88,8 +86,7 @@ bool Program::solvePuzzle()
                         ++distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = mapStates[parentState];
-                            mapStates[childState].push_back({ i, distance });
+                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
                         }
                     }
                 }
@@ -102,7 +99,6 @@ bool Program::solvePuzzle()
 
 void Program::showSolution()
 {
-    int number = 1;
     vector<int> rows(blockCount);
     vector<int> columns(blockCount);
 
@@ -111,11 +107,22 @@ void Program::showSolution()
         columns[i] = puzzle[i].column;
     }
 
-    for (auto &move : solution) {
-        int &row = rows[move.blockIndex];
-        int &column = columns[move.blockIndex];
+    vector<MapStates::iterator> iterators;
+    for (auto iter = lastIterator; iter->second.distance != 0; iter = iter->second.previous) {
+        iterators.push_back(iter);
+    }
+
+    auto first = iterators.rbegin();
+    auto last = iterators.rend();
+    int number = 1;
+
+    for (auto iter = first; iter != last; ++iter) {
+        const auto &move = (*iter)->second;
+        int blockIndex = move.blockIndex;
+        int &row = rows[blockIndex];
+        int &column = columns[blockIndex];
         cout << number << ": (" << row << ", " << column << ") ";
-        Direction direction = puzzle[move.blockIndex].direction;
+        Direction direction = puzzle[blockIndex].direction;
         if (direction == Horizontal) {
             if (move.distance < 0)
                 cout << -move.distance << 'L';
