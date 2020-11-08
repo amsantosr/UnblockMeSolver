@@ -30,12 +30,12 @@ void Program::readPuzzle()
 
 bool Program::solvePuzzle()
 {
-    MapStates mapStates;
+    map<State, Path> mapStates;
     vector<State> vector1, vector2;
     State childState;
     int distance;
 
-    mapStates[vector<int>(blockCount, 0)] = { 0, 0, mapStates.end() };
+    mapStates[vector<int>(blockCount, 0)];
     vector1.push_back(vector<int>(blockCount, 0));
 
     do {
@@ -49,7 +49,7 @@ bool Program::solvePuzzle()
                         --distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
+                            (mapStates[childState] = mapStates[parentState]).push_back({ i, distance });
                         }
                     }
                     childState = parentState;
@@ -58,9 +58,10 @@ bool Program::solvePuzzle()
                         ++distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = {i, distance, mapStates.find(parentState) };
+                            auto &path = mapStates[childState] = mapStates[parentState];
+                            path.push_back({i, distance });
                             if (puzzle[i].row == 2 && puzzle[i].column + childState[i] == 4) {
-                                lastIterator = mapStates.find(childState);
+                                solution = path;
                                 return true;
                             }
                         }
@@ -73,7 +74,7 @@ bool Program::solvePuzzle()
                         --distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
+                            (mapStates[childState] = mapStates[parentState]).push_back({ i, distance });
                         }
                     }
                     childState = parentState;
@@ -82,7 +83,7 @@ bool Program::solvePuzzle()
                         ++distance;
                         if (mapStates.find(childState) == mapStates.end()) {
                             vector2.push_back(childState);
-                            mapStates[childState] = { i, distance, mapStates.find(parentState) };
+                            (mapStates[childState] = mapStates[parentState]).push_back({ i, distance });
                         }
                     }
                 }
@@ -103,17 +104,8 @@ void Program::showSolution()
         columns[i] = puzzle[i].column;
     }
 
-    vector<MapStates::iterator> iterators;
-    for (auto iter = lastIterator; iter->second.distance != 0; iter = iter->second.previous) {
-        iterators.push_back(iter);
-    }
-
-    auto first = iterators.rbegin();
-    auto last = iterators.rend();
     int number = 1;
-
-    for (auto iter = first; iter != last; ++iter) {
-        const auto &move = (*iter)->second;
+    for (const auto &move : solution) {
         int blockIndex = move.blockIndex;
         int &row = rows[blockIndex];
         int &column = columns[blockIndex];

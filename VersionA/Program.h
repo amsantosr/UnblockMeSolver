@@ -19,15 +19,13 @@ private:
         Direction direction;
     };
 
-    typedef std::vector<Block> BlockVector;
-    typedef std::vector<int> State;
-    struct Move;
-    typedef std::map<State, Move> MapStates;
-
     struct Move {
         int blockIndex, distance;
-        MapStates::iterator previous;
     };
+
+    typedef std::vector<Block> BlockVector;
+    typedef std::vector<int> State;
+    typedef std::vector<Move> Path;
 
 private:
     void readPuzzle();
@@ -41,7 +39,7 @@ private:
 private:
     int blockCount;
     BlockVector puzzle;
-    MapStates::iterator lastIterator;
+    Path solution;
 };
 
 #endif
