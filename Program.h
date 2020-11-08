@@ -7,7 +7,7 @@
 class Program
 {
 public:
-    Program();
+    Program() {}
     void execute();
 
 private:
@@ -20,10 +20,10 @@ private:
     };
 
     typedef std::vector<Block> BlockVector;
-    struct Move;
     typedef std::vector<int> State;
-
+    struct Move;
     typedef std::map<State, Move> MapStates;
+
     struct Move {
         int blockIndex, distance;
         MapStates::iterator previous;

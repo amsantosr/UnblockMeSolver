@@ -5,17 +5,13 @@
 
 using namespace std;
 
-Program::Program()
-{
-}
-
 void Program::execute()
 {
     readPuzzle();
     if (solvePuzzle())
         showSolution();
     else
-        cerr << "Unable to solve the given puzzle.\n";
+        cout << "The given puzzle has no solution." << endl;
 }
 
 void Program::readPuzzle()
