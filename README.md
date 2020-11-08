@@ -4,9 +4,13 @@ This is a program that solves the game Unblock Me from the Google Play Store.
 
 ## Build
 
-To build this program you should compile the source with the following command:
+To build this program you should enter the appropriate directory. Subdirectory ``VersionA`` is for the shortest code version but not so efficient program. It may help you to understand the overal algorithm of the program. Subdirectory ``VersionB`` is for a more efficient version but longer code.
 ```
-cd WellFormedInput
+cd VersionA
+g++ Program.cpp -o Program
+```
+```
+cd VersionB
 g++ Program.cpp -o Program
 ```
 ## Run
